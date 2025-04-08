@@ -97,9 +97,8 @@ for i, contour in enumerate(contours):
 
     # Retrieving coordinates of the contour so that we can put text over the shape.
     x, y, w, h = cv2.boundingRect(approx)
-    x_mid = int(x + (w/3)) # This is an estimation of where the middle of the shape is in terms of the x-axis.
-    y_mid = int(y + (h/1.5)) # This is an estimation of where the middle of the shape is in terms of the y-axis.
-
+    x_mid = int(x + w/2) # This is an estimation of where the middle of the shape is in terms of the x-axis.
+    y_mid = int(y + h/2) # This is an estimation of where the middle of the shape is in terms of the y-axis.
     # Setting some variables which will be used to display text on the final image
     # cv.putText(img, text, org, fontFace, fontScale, color[, thickness[, lineType[, bottomLeftOrigin]]]) -> img
     text_coordinates = (x_mid, y_mid)
@@ -109,22 +108,40 @@ for i, contour in enumerate(contours):
     else:
         text_color = (255, 255, 255) # white
     text_font = cv2.FONT_HERSHEY_DUPLEX
-    text_thickness = 1  
+    text_thickness = 2
 
     # Identify the shape by the number of edges the contour has. 
     if len(approx) == 3:
-        cv2.putText(image, "Triangle", text_coordinates, text_font, text_thickness, text_color, text_thickness) # Text on the image
+        text = "Triangle"
+        (text_width, text_height), baseline = cv2.getTextSize(text, text_font, fontScale, text_thickness)
+        text_coordinates = (int(x_mid - text_width/2), int(y_mid + text_height/2))
+        cv2.putText(image, "Triangle", text_coordinates, text_font, fontScale, text_color, text_thickness) # Text on the image
     elif len(approx) == 4: # square / rectangle / parallelogram /
-        cv2.putText(image, "Quadrilateral", text_coordinates, text_font, text_thickness, text_color, text_thickness)
-    elif len(approx) == 5: 
-        cv2.putText(image, "Pentagon", text_coordinates, text_font, fontScale, text_color, text_thickness)
+        text = "Quadrilateral"
+        (text_width, text_height), baseline = cv2.getTextSize(text, text_font, fontScale, text_thickness)
+        text_coordinates = (int(x_mid - text_width/2), int(y_mid + text_height/2))
+        cv2.putText(image, text, text_coordinates, text_font, fontScale, text_color, text_thickness)
+    elif len(approx) == 5:
+        text = "Pentagon"
+        (text_width, text_height), baseline = cv2.getTextSize(text, text_font, fontScale, text_thickness)
+        text_coordinates = (int(x_mid - text_width/2), int(y_mid + text_height/2))
+        cv2.putText(image, text, text_coordinates, text_font, fontScale, text_color, text_thickness)
     elif len(approx) == 6:
-        cv2.putText(image, "Hexagon", text_coordinates, text_font, fontScale, text_color, text_thickness)
+        text = "Hexagon"
+        (text_width, text_height), baseline = cv2.getTextSize(text, text_font, fontScale, text_thickness)
+        text_coordinates = (int(x_mid - text_width/2), int(y_mid + text_height/2))
+        cv2.putText(image, text, text_coordinates, text_font, fontScale, text_color, text_thickness)
     elif len(approx) == 10:
-        cv2.putText(image, "Star", text_coordinates, text_font, fontScale, text_color, text_thickness)
+        text = "Star"
+        (text_width, text_height), baseline = cv2.getTextSize(text, text_font, fontScale, text_thickness)
+        text_coordinates = (int(x_mid - text_width/2), int(y_mid + text_height/2))
+        cv2.putText(image, text, text_coordinates, text_font, fontScale, text_color, text_thickness)
     else:
         # If the length is not any of the above, we assume the shape/contour to be a circle.
-        cv2.putText(image, "Circle", text_coordinates, text_font, fontScale, text_color, text_thickness)
+        text = "Circle"
+        (text_width, text_height), baseline = cv2.getTextSize(text, text_font, fontScale, text_thickness)
+        text_coordinates = (int(x_mid - text_width/2), int(y_mid + text_height/2))
+        cv2.putText(image, text, text_coordinates, text_font, fontScale, text_color, text_thickness)
     
 # Displaying the image with the detected shapes onto the screen
 output_window_name = "Output"
