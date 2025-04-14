@@ -1,5 +1,9 @@
 # Shape detection with Python using the OpenCV library
 
+<p align="center" width="100%">
+  <img style="display: block; margin: auto;" src="./images/shape_detection.png"/>
+</p>
+
 Python implementations of simple shape detection and identification using the OpenCV library.  
 
 The input images with shapes can have a light/dark background as shown in the examples (input_shapes_light_bkg.png and input_shapes_dark_bkg.png) shown below and provided in the images folder.
