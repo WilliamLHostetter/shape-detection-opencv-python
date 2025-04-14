@@ -3,13 +3,14 @@ This Python script reads in an image selected from a file dialog window, detects
 HoughCircles function in OpenCV, an dislpays the image with the detected circles marked.
 '''
 
-import os
-from tkinter import filedialog
+import os # to get current working directory
+from tkinter import filedialog # to select input images
 import cv2 # OpenCV Library
-import numpy as np
+import numpy as np # for images
 import ctypes # to get screen size
 
-def resize_image_to_fit_screensize(img):
+
+def resize_image_to_fit_screensize(img: np.ndarray) -> np.ndarray:
     ## get Screen Size
     user32 = ctypes.windll.user32
     (screensize_width, screensize_height) = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1) 
@@ -33,37 +34,44 @@ def resize_image_to_fit_screensize(img):
     img_resized = cv2.resize(img, (output_width, output_height))
     return img_resized
 
-input_img_path = filedialog.askopenfilename(title="Select an image", 
-                                            initialdir=os.getcwd(), 
-                                            filetypes=[("PNG", "*.png"), ("JPEG", "*.jpg"), ("All files", "*.*")])
 
-image = cv2.imread(input_img_path)
-input_window_name = "Input Image"
-cv2.imshow(input_window_name, resize_image_to_fit_screensize(image))
-gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-gray_img_blur = cv2.medianBlur(gray_img, 5)
+def main() -> None:
 
-# circles = cv2.HoughCircles(gray_img, cv2.HOUGH_GRADIENT,
-#                             dp, minDist, param1=100, param2=100,
-#                             minRadius=0, maxRadius=0)
-#Param 1 will set the sensitivity; how strong the edges of the circles need to 
-# be. Too high and it won't detect anything, too low and it will find too much 
-# clutter. Param 2 will set how many edge points it needs to find to declare 
-# that it's found a circle. Again, too high will detect nothing, too low will 
-# declare anything to be a circle. The ideal value of param 2 will be related to 
-# the circumference of the circles.
-circles = cv2.HoughCircles(gray_img_blur, cv2.HOUGH_GRADIENT, dp=1.2, minDist=100)
-print("Number of circles detected is", len(circles[0,:]))
+    input_img_path = filedialog.askopenfilename(title="Select an image", 
+                                                initialdir=os.getcwd(), 
+                                                filetypes=[("PNG", "*.png"), ("JPEG", "*.jpg"), ("All files", "*.*")])
 
-if circles is not None:
-    circles = np.uint16(np.around(circles))
-    for i in circles[0,:]:
-        # draw the outer circle
-        cv2.circle(image, center=(i[0], i[1]), radius=i[2], color=(0, 255, 0), thickness=5)
-        # draw the center of the circle
-        cv2.circle(image, center=(i[0], i[1]), radius=2, color=(0, 0, 255), thickness=3)
+    image = cv2.imread(input_img_path)
+    input_window_name = "Input Image"
+    cv2.imshow(input_window_name, resize_image_to_fit_screensize(image))
+    gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    gray_img_blur = cv2.medianBlur(gray_img, 5)
 
-output_window_name = "Output Circle Detection HoughCircles"
-cv2.imshow(output_window_name, resize_image_to_fit_screensize(image))
-cv2.waitKey(0) # Waits indefinitely for a key press before proceeding
-cv2.destroyAllWindows()
+    # circles = cv2.HoughCircles(gray_img, cv2.HOUGH_GRADIENT,
+    #                             dp, minDist, param1=100, param2=100,
+    #                             minRadius=0, maxRadius=0)
+    #Param 1 will set the sensitivity; how strong the edges of the circles need to 
+    # be. Too high and it won't detect anything, too low and it will find too much 
+    # clutter. Param 2 will set how many edge points it needs to find to declare 
+    # that it's found a circle. Again, too high will detect nothing, too low will 
+    # declare anything to be a circle. The ideal value of param 2 will be related to 
+    # the circumference of the circles.
+    circles = cv2.HoughCircles(gray_img_blur, cv2.HOUGH_GRADIENT, dp=1.2, minDist=100)
+    print("Number of circles detected is", len(circles[0,:]))
+
+    if circles is not None:
+        circles = np.uint16(np.around(circles))
+        for i in circles[0,:]:
+            # draw the outer circle
+            cv2.circle(image, center=(i[0], i[1]), radius=i[2], color=(0, 255, 0), thickness=5)
+            # draw the center of the circle
+            cv2.circle(image, center=(i[0], i[1]), radius=2, color=(0, 0, 255), thickness=3)
+
+    output_window_name = "Output Circle Detection HoughCircles"
+    cv2.imshow(output_window_name, resize_image_to_fit_screensize(image))
+    cv2.waitKey(0) # Waits indefinitely for a key press before proceeding
+    cv2.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    main()
